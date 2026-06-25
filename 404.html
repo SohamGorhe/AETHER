@@ -1,0 +1,78 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Page Not Found — AETHER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Inter:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--black:#000000;--off-white:#F0EDE8;--warm-gray:#9A9590;--mid:#2A2926;--border:#1E1D1B;--accent:#C8B89A;--serif:'Playfair Display',Georgia,serif;--sans:'Inter',sans-serif;--mono:'DM Mono',monospace;}
+html,body{height:100%}
+body{background:var(--black);color:var(--off-white);font-family:var(--sans);font-weight:300;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:40px;cursor:none;overflow:hidden}
+.cursor{position:fixed;width:8px;height:8px;background:var(--off-white);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width 0.3s,height 0.3s}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(240,237,232,0.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.08s,width 0.3s}
+.cursor.hover{width:4px;height:4px}.cursor-ring.hover{width:56px;height:56px;border-color:rgba(200,184,154,0.6)}
+nav{position:fixed;top:0;left:0;right:0;padding:28px 48px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:var(--serif);font-size:18px;font-weight:500;letter-spacing:0.12em;color:var(--off-white);text-decoration:none}
+/* BG canvas */
+#bg-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;opacity:0.12}
+.content{position:relative;z-index:1;max-width:600px}
+.four04{font-family:var(--serif);font-size:clamp(100px,20vw,200px);font-weight:400;line-height:1;color:var(--mid);letter-spacing:-0.04em;margin-bottom:0;opacity:0;animation:fadeUp 1s 0.2s cubic-bezier(0.16,1,0.3,1) forwards}
+.eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:0.28em;text-transform:uppercase;color:var(--accent);margin-bottom:20px;opacity:0;animation:fadeUp 1s 0.4s cubic-bezier(0.16,1,0.3,1) forwards}
+.title{font-family:var(--serif);font-size:clamp(28px,4vw,48px);font-weight:400;font-style:italic;line-height:1.1;margin-bottom:16px;opacity:0;animation:fadeUp 1s 0.5s cubic-bezier(0.16,1,0.3,1) forwards}
+.sub{font-size:14px;color:var(--warm-gray);line-height:1.8;margin-bottom:48px;opacity:0;animation:fadeUp 1s 0.6s cubic-bezier(0.16,1,0.3,1) forwards}
+.actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp 1s 0.7s cubic-bezier(0.16,1,0.3,1) forwards}
+.btn-primary{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;background:var(--off-white);color:var(--black);padding:14px 36px;text-decoration:none;transition:all 0.3s;font-weight:500}
+.btn-primary:hover{background:var(--accent)}
+.btn-ghost{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;border:1px solid rgba(240,237,232,0.25);color:var(--off-white);padding:14px 36px;text-decoration:none;transition:all 0.3s}
+.btn-ghost:hover{border-color:var(--off-white)}
+.quick-links{margin-top:56px;display:flex;gap:28px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp 1s 0.9s cubic-bezier(0.16,1,0.3,1) forwards}
+.quick-link{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm-gray);text-decoration:none;transition:color 0.3s}
+.quick-link:hover{color:var(--off-white)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){nav{padding:20px 24px}.actions{flex-direction:column;align-items:center}}
+</style></head><body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+<canvas id="bg-canvas"></canvas>
+<nav><a href="index.html" class="nav-logo">AETHER</a></nav>
+<div class="content">
+  <div class="four04">404</div>
+  <div class="eyebrow">Page not found</div>
+  <h1 class="title">This page doesn't exist.<br>Yet.</h1>
+  <p class="sub">The object you were looking for has either moved, been retired, or was never here to begin with. Slow down — the right page is just below.</p>
+  <div class="actions">
+    <a href="index.html" class="btn-primary">Go home</a>
+    <a href="collection.html" class="btn-ghost">Shop the collection</a>
+  </div>
+  <div class="quick-links">
+    <a href="sneakers.html" class="quick-link">Sneakers</a>
+    <a href="bags.html" class="quick-link">Bags</a>
+    <a href="outerwear.html" class="quick-link">Outerwear</a>
+    <a href="objects.html" class="quick-link">Objects</a>
+    <a href="contact.html" class="quick-link">Contact</a>
+    <a href="faq.html" class="quick-link">FAQ</a>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});
+function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing)}
+animRing();
+document.querySelectorAll('a').forEach(el=>{el.addEventListener('mouseenter',()=>{cursor.classList.add('hover');ring.classList.add('hover')});el.addEventListener('mouseleave',()=>{cursor.classList.remove('hover');ring.classList.remove('hover')});});
+// Mini torus knot background
+const canvas=document.getElementById('bg-canvas');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.setSize(window.innerWidth,window.innerHeight);
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,0.1,100);
+camera.position.set(0,0,5);
+const mat=new THREE.MeshBasicMaterial({color:0xC8B89A,wireframe:true,transparent:true,opacity:0.18});
+const tk=new THREE.Mesh(new THREE.TorusKnotGeometry(1.4,0.38,180,18,2,3),mat);
+scene.add(tk);
+function animate(){requestAnimationFrame(animate);const t=Date.now()*0.0003;tk.rotation.x=t*0.5;tk.rotation.y=t*0.7;renderer.render(scene,camera);}
+animate();
+window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight);});
+</script>
+</body></html>
