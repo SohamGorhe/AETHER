@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Checkout — AETHER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Inter:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--black:#000000;--off-white:#F0EDE8;--warm-gray:#9A9590;--mid:#2A2926;--border:#1E1D1B;--accent:#C8B89A;--serif:'Playfair Display',Georgia,serif;--sans:'Inter',sans-serif;--mono:'DM Mono',monospace;}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--off-white);font-family:var(--sans);font-weight:300;overflow-x:hidden;cursor:none}
+.cursor{position:fixed;width:8px;height:8px;background:var(--off-white);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width 0.3s,height 0.3s}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(240,237,232,0.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.08s,width 0.3s}
+.cursor.hover{width:4px;height:4px}.cursor-ring.hover{width:56px;height:56px}
+::-webkit-scrollbar{width:2px}::-webkit-scrollbar-track{background:var(--black)}::-webkit-scrollbar-thumb{background:var(--border)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:28px 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--serif);font-size:18px;font-weight:500;letter-spacing:0.12em;color:var(--off-white);text-decoration:none}
+.nav-secure{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--warm-gray);display:flex;align-items:center;gap:8px}
+.nav-secure::before{content:'🔒';font-size:11px}
+.page-wrap{max-width:1100px;margin:0 auto;padding:120px 48px 80px}
+/* STEPS */
+.steps{display:flex;align-items:center;gap:0;margin-bottom:64px;border-bottom:1px solid var(--border);padding-bottom:32px}
+.step{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm-gray);flex:1}
+.step.active{color:var(--off-white)}
+.step.done{color:var(--accent)}
+.step-num{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
+.step.active .step-num{border-color:var(--off-white);color:var(--off-white)}
+.step.done .step-num{border-color:var(--accent);background:var(--accent);color:var(--black)}
+.step-divider{flex:1;height:1px;background:var(--border);max-width:60px}
+/* LAYOUT */
+.checkout-layout{display:grid;grid-template-columns:1fr 380px;gap:80px;align-items:start}
+/* FORM */
+.form-section{margin-bottom:48px}
+.form-section-title{font-family:var(--mono);font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-grid.full{grid-template-columns:1fr}
+.form-group{display:flex;flex-direction:column;gap:8px}
+.form-group.span2{grid-column:span 2}
+.form-label{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--warm-gray)}
+.form-input{background:none;border:1px solid var(--border);color:var(--off-white);padding:14px 16px;font-family:var(--sans);font-size:14px;font-weight:300;outline:none;transition:border-color 0.2s;width:100%}
+.form-input:focus{border-color:var(--off-white)}
+.form-input::placeholder{color:rgba(154,149,144,0.5)}
+select.form-input{appearance:none;cursor:pointer}
+/* SHIPPING OPTIONS */
+.shipping-options{display:flex;flex-direction:column;gap:2px;margin-top:8px}
+.shipping-option{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border:1px solid var(--border);cursor:pointer;transition:border-color 0.2s}
+.shipping-option.selected{border-color:var(--accent)}
+.shipping-option-left{display:flex;align-items:center;gap:14px}
+.shipping-radio{width:16px;height:16px;border-radius:50%;border:1px solid var(--border);flex-shrink:0;position:relative}
+.shipping-option.selected .shipping-radio{border-color:var(--accent)}
+.shipping-option.selected .shipping-radio::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--accent)}
+.shipping-name{font-size:13px;color:var(--off-white)}
+.shipping-eta{font-family:var(--mono);font-size:9px;letter-spacing:0.12em;color:var(--warm-gray);text-transform:uppercase;margin-top:3px}
+.shipping-price{font-family:var(--mono);font-size:12px;color:var(--accent)}
+/* PAYMENT */
+.payment-icons{display:flex;gap:8px;margin-bottom:20px}
+.payment-icon{background:var(--mid);border:1px solid var(--border);padding:6px 12px;font-family:var(--mono);font-size:8px;letter-spacing:0.12em;color:var(--warm-gray);text-transform:uppercase}
+.card-row{position:relative}
+.card-icons{position:absolute;right:14px;top:50%;transform:translateY(-50%);display:flex;gap:6px;font-size:10px}
+/* ORDER SUMMARY PANEL */
+.order-panel{background:var(--mid);padding:36px;position:sticky;top:100px}
+.panel-title{font-family:var(--mono);font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:24px}
+.panel-item{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--border)}
+.panel-item:last-of-type{border-bottom:none}
+.panel-item-img{width:60px;height:72px;overflow:hidden;background:var(--border);flex-shrink:0;position:relative}
+.panel-item-img img{width:100%;height:100%;object-fit:cover;filter:brightness(0.7)}
+.panel-item-qty{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--warm-gray);color:var(--black);font-family:var(--mono);font-size:9px;display:flex;align-items:center;justify-content:center}
+.panel-item-name{font-family:var(--serif);font-size:15px;font-weight:400;margin-bottom:4px}
+.panel-item-meta{font-family:var(--mono);font-size:8px;letter-spacing:0.14em;color:var(--warm-gray);text-transform:uppercase;line-height:1.7}
+.panel-item-price{font-family:var(--mono);font-size:12px;color:var(--accent);margin-left:auto;white-space:nowrap;padding-top:2px}
+.panel-divider{height:1px;background:var(--border);margin:20px 0}
+.panel-row{display:flex;justify-content:space-between;font-size:13px;color:var(--warm-gray);margin-bottom:10px}
+.panel-total{display:flex;justify-content:space-between;font-family:var(--serif);font-size:22px;font-weight:400;color:var(--off-white);margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
+.panel-total span:last-child{color:var(--accent)}
+.place-order-btn{width:100%;padding:18px;background:var(--off-white);color:var(--black);border:none;font-family:var(--mono);font-size:11px;letter-spacing:0.22em;text-transform:uppercase;cursor:pointer;transition:all 0.3s;margin-top:24px;font-weight:500}
+.place-order-btn:hover{background:var(--accent)}
+.secure-note{font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--warm-gray);text-align:center;margin-top:12px;line-height:1.7}
+footer{border-top:1px solid var(--border);padding:52px 48px;display:grid;grid-template-columns:1fr 1fr 1fr;align-items:end;margin-top:80px}
+.footer-logo{font-family:var(--serif);font-size:28px;font-weight:400;letter-spacing:0.05em}
+.footer-copy{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;color:var(--warm-gray);text-transform:uppercase}
+.footer-links{display:flex;gap:28px;justify-content:flex-end}
+.footer-links a{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm-gray);text-decoration:none;transition:color 0.3s}
+.footer-links a:hover{color:var(--off-white)}
+@media(max-width:900px){
+nav{padding:20px 24px}
+.page-wrap{padding:100px 20px 60px}
+.checkout-layout{grid-template-columns:1fr}
+.order-panel{position:static}
+.form-grid{grid-template-columns:1fr}
+.form-group.span2{grid-column:span 1}
+footer{grid-template-columns:1fr;gap:28px;padding:40px 20px}.footer-links{justify-content:flex-start}
+}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+<nav>
+  <a href="index.html" class="nav-logo">AETHER</a>
+  <div class="nav-secure">Secure Checkout</div>
+</nav>
+
+<div class="page-wrap">
+  <!-- STEPS -->
+  <div class="steps">
+    <div class="step done"><div class="step-num">✓</div>Cart</div>
+    <div class="step-divider"></div>
+    <div class="step active"><div class="step-num">2</div>Details</div>
+    <div class="step-divider"></div>
+    <div class="step"><div class="step-num">3</div>Shipping</div>
+    <div class="step-divider"></div>
+    <div class="step"><div class="step-num">4</div>Payment</div>
+  </div>
+
+  <div class="checkout-layout">
+    <div class="checkout-form">
+
+      <!-- CONTACT -->
+      <div class="form-section">
+        <div class="form-section-title">Contact Information</div>
+        <div class="form-grid full">
+          <div class="form-group">
+            <label class="form-label">Email address</label>
+            <input class="form-input" type="email" placeholder="your@email.com"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone (optional)</label>
+            <input class="form-input" type="tel" placeholder="+1 (000) 000-0000"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- SHIPPING ADDRESS -->
+      <div class="form-section">
+        <div class="form-section-title">Shipping Address</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">First name</label>
+            <input class="form-input" type="text" placeholder="James"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last name</label>
+            <input class="form-input" type="text" placeholder="Kato"/>
+          </div>
+          <div class="form-group span2">
+            <label class="form-label">Address</label>
+            <input class="form-input" type="text" placeholder="123 Street Name"/>
+          </div>
+          <div class="form-group span2">
+            <label class="form-label">Apartment, suite, etc. (optional)</label>
+            <input class="form-input" type="text" placeholder="Apt 4B"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">City</label>
+            <input class="form-input" type="text" placeholder="Tokyo"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Postal code</label>
+            <input class="form-input" type="text" placeholder="100-0001"/>
+          </div>
+          <div class="form-group span2">
+            <label class="form-label">Country</label>
+            <select class="form-input">
+              <option>Japan</option>
+              <option>United States</option>
+              <option>United Kingdom</option>
+              <option>Germany</option>
+              <option>France</option>
+              <option>Italy</option>
+              <option>Australia</option>
+              <option>India</option>
+              <option>Canada</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- SHIPPING METHOD -->
+      <div class="form-section">
+        <div class="form-section-title">Shipping Method</div>
+        <div class="shipping-options">
+          <div class="shipping-option selected" onclick="selectShipping(this)">
+            <div class="shipping-option-left">
+              <div class="shipping-radio"></div>
+              <div>
+                <div class="shipping-name">Standard Worldwide</div>
+                <div class="shipping-eta">3–5 business days</div>
+              </div>
+            </div>
+            <div class="shipping-price">Free</div>
+          </div>
+          <div class="shipping-option" onclick="selectShipping(this)">
+            <div class="shipping-option-left">
+              <div class="shipping-radio"></div>
+              <div>
+                <div class="shipping-name">Express Worldwide</div>
+                <div class="shipping-eta">1–2 business days</div>
+              </div>
+            </div>
+            <div class="shipping-price">$24</div>
+          </div>
+          <div class="shipping-option" onclick="selectShipping(this)">
+            <div class="shipping-option-left">
+              <div class="shipping-radio"></div>
+              <div>
+                <div class="shipping-name">Same Day (select cities)</div>
+                <div class="shipping-eta">Today by 8pm</div>
+              </div>
+            </div>
+            <div class="shipping-price">$48</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAYMENT -->
+      <div class="form-section">
+        <div class="form-section-title">Payment</div>
+        <div class="payment-icons">
+          <div class="payment-icon">Visa</div>
+          <div class="payment-icon">MC</div>
+          <div class="payment-icon">Amex</div>
+          <div class="payment-icon">PayPal</div>
+          <div class="payment-icon">Apple Pay</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group span2 card-row">
+            <label class="form-label">Card number</label>
+            <input class="form-input" type="text" placeholder="1234 5678 9012 3456" maxlength="19"/>
+            <div class="card-icons">💳</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Expiry date</label>
+            <input class="form-input" type="text" placeholder="MM / YY" maxlength="7"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Security code</label>
+            <input class="form-input" type="text" placeholder="CVV" maxlength="4"/>
+          </div>
+          <div class="form-group span2">
+            <label class="form-label">Name on card</label>
+            <input class="form-input" type="text" placeholder="James Kato"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDER PANEL -->
+    <div class="order-panel">
+      <div class="panel-title">Order Summary</div>
+      <div class="panel-item">
+        <div class="panel-item-img">
+          <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&auto=format&fit=crop&q=70" alt="Runner Low"/>
+          <div class="panel-item-qty">1</div>
+        </div>
+        <div>
+          <div class="panel-item-name">Runner Low</div>
+          <div class="panel-item-meta">Natural Tan · EU 42</div>
+        </div>
+        <div class="panel-item-price">$320</div>
+      </div>
+      <div class="panel-item">
+        <div class="panel-item-img">
+          <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=200&auto=format&fit=crop&q=70" alt="Tote No.1"/>
+          <div class="panel-item-qty">1</div>
+        </div>
+        <div>
+          <div class="panel-item-name">Tote No.1</div>
+          <div class="panel-item-meta">Dark Walnut · One size</div>
+        </div>
+        <div class="panel-item-price">$520</div>
+      </div>
+      <div class="panel-divider"></div>
+      <div class="panel-row"><span>Subtotal</span><span>$840</span></div>
+      <div class="panel-row"><span>Shipping</span><span style="color:var(--accent)">Free</span></div>
+      <div class="panel-row"><span>Tax</span><span>$0.00</span></div>
+      <div class="panel-total"><span>Total</span><span>$840</span></div>
+      <button class="place-order-btn" onclick="location.href='confirmation.html'">Place Order</button>
+      <div class="secure-note">🔒 256-bit SSL encryption · Your data is safe</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">AETHER</div>
+  <div class="footer-copy">© 2024 Aether. All rights reserved.</div>
+  <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a></div>
+</footer>
+
+<script>
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});
+function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing)}
+animRing();
+document.querySelectorAll('a,button,input,select,.shipping-option').forEach(el=>{el.addEventListener('mouseenter',()=>{cursor.classList.add('hover');ring.classList.add('hover')});el.addEventListener('mouseleave',()=>{cursor.classList.remove('hover');ring.classList.remove('hover')});});
+function selectShipping(el){document.querySelectorAll('.shipping-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');}
+// Card number formatting
+document.querySelector('input[placeholder="1234 5678 9012 3456"]').addEventListener('input',function(){
+  let v=this.value.replace(/\D/g,'').substring(0,16);
+  this.value=v.replace(/(.{4})/g,'$1 ').trim();
+});
+</script>
+</body>
+</html>
