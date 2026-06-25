@@ -40,13 +40,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:28px 48px;display:fl
 #three-canvas{position:absolute;inset:0;width:100%;height:100%}
 .hero-bg-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.08;z-index:0}
 .hero-content{position:relative;z-index:2;text-align:center;max-width:900px;padding:0 24px}
-.hero-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:32px;opacity:0;transform:translateY(16px);transition:opacity 1s 0.2s,transform 1s 0.2s}
+.hero-content::before{content:'';position:absolute;inset:-60px -80px;background:radial-gradient(ellipse at center,rgba(0,0,0,0.72) 0%,rgba(0,0,0,0.35) 55%,transparent 80%);z-index:-1;pointer-events:none}
+.hero-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:32px;opacity:0;transform:translateY(16px);transition:opacity 1s 0.2s,transform 1s 0.2s;text-shadow:0 1px 8px rgba(0,0,0,0.8)}
 .hero-eyebrow.visible{opacity:1;transform:translateY(0)}
-.hero-headline{font-family:var(--serif);font-size:clamp(52px,8vw,110px);font-weight:400;line-height:1.05;letter-spacing:-0.01em;margin-bottom:40px;overflow:hidden}
+.hero-headline{font-family:var(--serif);font-size:clamp(52px,8vw,110px);font-weight:400;line-height:1.05;letter-spacing:-0.01em;margin-bottom:40px;overflow:hidden;text-shadow:0 2px 20px rgba(0,0,0,0.6),0 1px 4px rgba(0,0,0,0.8)}
 .hero-headline .word{display:inline-block;overflow:hidden;margin-right:0.18em}
 .hero-headline .char{display:inline-block;transform:translateY(110%);transition:transform 0.9s cubic-bezier(0.16,1,0.3,1)}
 .hero-headline .char.visible{transform:translateY(0)}
-.hero-tagline{font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:56px;opacity:0;transition:opacity 1.2s 1.4s}
+.hero-tagline{font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:56px;opacity:0;transition:opacity 1.2s 1.4s;text-shadow:0 1px 8px rgba(0,0,0,0.8)}
 .hero-tagline.visible{opacity:1}
 .hero-actions{display:flex;gap:16px;justify-content:center;opacity:0;transform:translateY(20px);transition:opacity 0.9s 1.8s,transform 0.9s 1.8s}
 .hero-actions.visible{opacity:1;transform:translateY(0)}
