@@ -509,7 +509,7 @@ document.querySelectorAll('a,button,.product-card').forEach(el=>{
   el.addEventListener('mouseleave',()=>{cursor.classList.remove('hover');ring.classList.remove('hover')});
 });
 
-/* HERO THREE.JS — REFINED */
+/* HERO THREE.JS */
 (function(){
 const canvas=document.getElementById('three-canvas');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
@@ -518,54 +518,28 @@ renderer.setSize(window.innerWidth,window.innerHeight);
 const scene=new THREE.Scene();
 const camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,0.1,100);
 camera.position.set(0,0,5);
-
-// Richer gold, higher opacity, larger size
-const mat=new THREE.MeshBasicMaterial({color:0xC8A96E,wireframe:true,transparent:true,opacity:0.38});
-const mat2=new THREE.MeshBasicMaterial({color:0xF0EDE8,wireframe:true,transparent:true,opacity:0.10});
-
-// Larger torus knot
-const torusKnot=new THREE.Mesh(new THREE.TorusKnotGeometry(1.9,0.48,220,24,2,3),mat);
+const mat=new THREE.MeshBasicMaterial({color:0xC8B89A,wireframe:true,transparent:true,opacity:0.18});
+const mat2=new THREE.MeshBasicMaterial({color:0xF0EDE8,wireframe:true,transparent:true,opacity:0.06});
+const torusKnot=new THREE.Mesh(new THREE.TorusKnotGeometry(1.4,0.38,180,18,2,3),mat);
 scene.add(torusKnot);
-const outerSphere=new THREE.Mesh(new THREE.SphereGeometry(3.4,28,28),mat2);
+const outerSphere=new THREE.Mesh(new THREE.SphereGeometry(2.8,24,24),mat2);
 scene.add(outerSphere);
-
-// More particles, slightly larger
 const particles=new THREE.BufferGeometry();
-const pCount=900;
+const pCount=600;
 const pPos=new Float32Array(pCount*3);
-for(let i=0;i<pCount*3;i++)pPos[i]=(Math.random()-0.5)*18;
+for(let i=0;i<pCount*3;i++)pPos[i]=(Math.random()-0.5)*16;
 particles.setAttribute('position',new THREE.BufferAttribute(pPos,3));
-const pMat=new THREE.PointsMaterial({color:0xF0EDE8,size:0.022,transparent:true,opacity:0.4});
+const pMat=new THREE.PointsMaterial({color:0xF0EDE8,size:0.018,transparent:true,opacity:0.35});
 scene.add(new THREE.Points(particles,pMat));
-
 let mouseX=0,mouseY=0;
 document.addEventListener('mousemove',e=>{mouseX=(e.clientX/window.innerWidth-0.5)*0.8;mouseY=(e.clientY/window.innerHeight-0.5)*0.5});
-
-function lerpColor(a,b,t){
-  const ah=parseInt(a.slice(1),16),bh=parseInt(b.slice(1),16);
-  const ar=(ah>>16)&0xff,ag=(ah>>8)&0xff,ab=ah&0xff;
-  const br=(bh>>16)&0xff,bg=(bh>>8)&0xff,bb=bh&0xff;
-  const r=Math.round(ar+(br-ar)*t);
-  const g=Math.round(ag+(bg-ag)*t);
-  const b2=Math.round(ab+(bb-ab)*t);
-  return(r<<16)|(g<<8)|b2;
-}
-
 function animate(){
   requestAnimationFrame(animate);
-  // Slower rotation — more cinematic
-  const t=Date.now()*0.00018;
-
-  // Slow color pulse — gold (#C8A96E) to cream (#F0EDE8)
-  const pulse=(Math.sin(Date.now()*0.0004)+1)/2;
-  mat.color.setHex(lerpColor('#C8A96E','#F0EDE8',pulse*0.6));
-  mat.opacity=0.30+pulse*0.18;
-
+  const t=Date.now()*0.0004;
   torusKnot.rotation.x=t*0.5+mouseY*0.3;
   torusKnot.rotation.y=t*0.7+mouseX*0.3;
-  outerSphere.rotation.x=t*0.08;
-  outerSphere.rotation.y=t*0.12;
-
+  outerSphere.rotation.x=t*0.1;
+  outerSphere.rotation.y=t*0.15;
   camera.position.x+=(mouseX*0.5-camera.position.x)*0.04;
   camera.position.y+=(-mouseY*0.3-camera.position.y)*0.04;
   camera.lookAt(scene.position);
