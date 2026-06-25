@@ -509,7 +509,7 @@ document.querySelectorAll('a,button,.product-card').forEach(el=>{
   el.addEventListener('mouseleave',()=>{cursor.classList.remove('hover');ring.classList.remove('hover')});
 });
 
-/* HERO THREE.JS — SNEAKER → BAG → JACKET PARTICLE MORPH */
+/* HERO THREE.JS — REFINED */
 (function(){
 const canvas=document.getElementById('three-canvas');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
@@ -517,195 +517,57 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 renderer.setSize(window.innerWidth,window.innerHeight);
 const scene=new THREE.Scene();
 const camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,0.1,100);
-camera.position.set(0,0,6);
+camera.position.set(0,0,5);
 
-const COUNT=7000;
-const geo=new THREE.BufferGeometry();
-const pos=new Float32Array(COUNT*3);
-const col=new Float32Array(COUNT*3);
-const phases=new Float32Array(COUNT);
-const speeds=new Float32Array(COUNT);
+// Richer gold, higher opacity, larger size
+const mat=new THREE.MeshBasicMaterial({color:0xC8A96E,wireframe:true,transparent:true,opacity:0.38});
+const mat2=new THREE.MeshBasicMaterial({color:0xF0EDE8,wireframe:true,transparent:true,opacity:0.10});
 
-// --- SNEAKER silhouette (side profile, built from parametric curves) ---
-function sneakerPoint(i){
-  const t=i/COUNT;
-  // Sole: flat ellipse at bottom
-  const sole=t<0.35;
-  // Toe box: rounded front
-  const toe=t>=0.35&&t<0.55;
-  // Upper body: sweeping arch
-  const upper=t>=0.55&&t<0.80;
-  // Heel counter: back curve
-  const heel=t>=0.80;
+// Larger torus knot
+const torusKnot=new THREE.Mesh(new THREE.TorusKnotGeometry(1.9,0.48,220,24,2,3),mat);
+scene.add(torusKnot);
+const outerSphere=new THREE.Mesh(new THREE.SphereGeometry(3.4,28,28),mat2);
+scene.add(outerSphere);
 
-  let x,y,z;
-  const jx=(Math.random()-0.5)*0.08;
-  const jy=(Math.random()-0.5)*0.06;
-  const jz=(Math.random()-0.5)*0.5; // depth scatter
-
-  if(sole){
-    const u=(t/0.35)*Math.PI*2;
-    x=-1.8+Math.cos(u)*2.0;
-    y=-1.1+Math.sin(u)*0.18;
-  } else if(toe){
-    const u=((t-0.35)/0.20)*Math.PI;
-    x=0.2+Math.cos(u)*0.55;
-    y=-0.9+Math.sin(u)*0.65;
-  } else if(upper){
-    const u=((t-0.55)/0.25)*Math.PI;
-    x=0.3-u*1.2;
-    y=-0.25+Math.sin(u*0.9)*0.9+u*0.3;
-  } else {
-    const u=((t-0.80)/0.20)*Math.PI;
-    x=-1.6+Math.cos(u)*0.45;
-    y=-0.6+Math.sin(u)*0.7;
-  }
-  return[x*1.1+jx, y*1.0+jy, jz];
-}
-
-// --- TOTE BAG silhouette ---
-function bagPoint(i){
-  const t=i/COUNT;
-  const jx=(Math.random()-0.5)*0.07;
-  const jy=(Math.random()-0.5)*0.07;
-  const jz=(Math.random()-0.5)*0.5;
-
-  // Body: rounded rectangle
-  const body=t<0.55;
-  // Handles: two arches on top
-  const handle=t>=0.55;
-
-  let x,y;
-  if(body){
-    const u=(t/0.55)*Math.PI*2;
-    const rx=1.4, ry=1.1;
-    x=Math.cos(u)*rx;
-    y=Math.sin(u)*ry-0.1;
-    // Flatten bottom slightly
-    if(y<-0.9) y=-0.9+Math.random()*0.08;
-  } else {
-    // Two handles
-    const ht=(t-0.55)/0.45;
-    const side=ht<0.5?-1:1;
-    const u=(ht%0.5)/0.5*Math.PI;
-    x=side*0.55+Math.cos(u-Math.PI)*0.4;
-    y=1.0+Math.sin(u)*0.7;
-  }
-  return[x+jx, y+jy, jz];
-}
-
-// --- JACKET / OUTERWEAR silhouette ---
-function jacketPoint(i){
-  const t=i/COUNT;
-  const jx=(Math.random()-0.5)*0.07;
-  const jy=(Math.random()-0.5)*0.07;
-  const jz=(Math.random()-0.5)*0.5;
-
-  const shoulders=t<0.18;
-  const leftSleeve=t>=0.18&&t<0.38;
-  const rightSleeve=t>=0.38&&t<0.58;
-  const body=t>=0.58&&t<0.82;
-  const collar=t>=0.82;
-
-  let x,y;
-  if(shoulders){
-    const u=(t/0.18)*Math.PI;
-    x=(u/Math.PI)*3.6-1.8;
-    y=0.9+Math.sin(u)*0.15;
-  } else if(leftSleeve){
-    const u=((t-0.18)/0.20)*Math.PI;
-    x=-1.8-Math.sin(u)*0.3;
-    y=0.9-u*0.9;
-  } else if(rightSleeve){
-    const u=((t-0.38)/0.20)*Math.PI;
-    x=1.8+Math.sin(u)*0.3;
-    y=0.9-u*0.9;
-  } else if(body){
-    const u=((t-0.58)/0.24)*Math.PI*2;
-    const rx=1.3, ry=1.0;
-    x=Math.cos(u)*rx;
-    y=Math.sin(u)*ry-0.3;
-    if(y>0.5) y=0.5;
-  } else {
-    const u=((t-0.82)/0.18)*Math.PI;
-    x=(Math.cos(u))*0.35;
-    y=1.0+Math.sin(u)*0.4;
-  }
-  return[x*0.95+jx, y*0.95+jy, jz];
-}
-
-const shapeA=new Float32Array(COUNT*3);
-const shapeB=new Float32Array(COUNT*3);
-const shapeC=new Float32Array(COUNT*3);
-
-for(let i=0;i<COUNT;i++){
-  const s=sneakerPoint(i); shapeA[i*3]=s[0];shapeA[i*3+1]=s[1];shapeA[i*3+2]=s[2];
-  const b=bagPoint(i);     shapeB[i*3]=b[0];shapeB[i*3+1]=b[1];shapeB[i*3+2]=b[2];
-  const j=jacketPoint(i);  shapeC[i*3]=j[0];shapeC[i*3+1]=j[1];shapeC[i*3+2]=j[2];
-  phases[i]=Math.random()*Math.PI*2;
-  speeds[i]=0.3+Math.random()*0.7;
-  const mix=Math.random();
-  col[i*3]=0.76+mix*0.18; col[i*3+1]=0.70+mix*0.14; col[i*3+2]=0.58+mix*0.38;
-}
-
-geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
-geo.setAttribute('color',new THREE.BufferAttribute(col,3));
-const mat=new THREE.PointsMaterial({size:0.024,vertexColors:true,transparent:true,opacity:0.9,sizeAttenuation:true});
-const points=new THREE.Points(geo,mat);
-scene.add(points);
+// More particles, slightly larger
+const particles=new THREE.BufferGeometry();
+const pCount=900;
+const pPos=new Float32Array(pCount*3);
+for(let i=0;i<pCount*3;i++)pPos[i]=(Math.random()-0.5)*18;
+particles.setAttribute('position',new THREE.BufferAttribute(pPos,3));
+const pMat=new THREE.PointsMaterial({color:0xF0EDE8,size:0.022,transparent:true,opacity:0.4});
+scene.add(new THREE.Points(particles,pMat));
 
 let mouseX=0,mouseY=0;
-document.addEventListener('mousemove',e=>{mouseX=(e.clientX/window.innerWidth-0.5)*2;mouseY=(e.clientY/window.innerHeight-0.5)*2});
+document.addEventListener('mousemove',e=>{mouseX=(e.clientX/window.innerWidth-0.5)*0.8;mouseY=(e.clientY/window.innerHeight-0.5)*0.5});
 
-function easeInOut(t){return t<0.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
-
-// Label display
-const labels=['Sneakers','Bags','Outerwear'];
-let lastLabel=-1;
-function showLabel(idx){
-  if(lastLabel===idx)return;
-  lastLabel=idx;
-  const el=document.getElementById('hero-tagline');
-  if(el){
-    el.style.opacity='0';
-    setTimeout(()=>{
-      el.textContent=labels[idx]+' · '+['12 colorways · from $280','Full-grain leather · from $420','Technical fabrics · from $680'][idx];
-      el.style.opacity='1';
-    },400);
-  }
+function lerpColor(a,b,t){
+  const ah=parseInt(a.slice(1),16),bh=parseInt(b.slice(1),16);
+  const ar=(ah>>16)&0xff,ag=(ah>>8)&0xff,ab=ah&0xff;
+  const br=(bh>>16)&0xff,bg=(bh>>8)&0xff,bb=bh&0xff;
+  const r=Math.round(ar+(br-ar)*t);
+  const g=Math.round(ag+(bg-ag)*t);
+  const b2=Math.round(ab+(bb-ab)*t);
+  return(r<<16)|(g<<8)|b2;
 }
 
 function animate(){
   requestAnimationFrame(animate);
-  const t=Date.now()*0.0005;
-  const cycle=15;
-  const tc=(t%cycle)/cycle;
+  // Slower rotation — more cinematic
+  const t=Date.now()*0.00018;
 
-  let fromArr,toArr,blend,labelIdx;
-  if(tc<0.33){
-    fromArr=shapeA;toArr=shapeB;blend=easeInOut(tc/0.33);labelIdx=blend>0.5?1:0;
-  } else if(tc<0.66){
-    fromArr=shapeB;toArr=shapeC;blend=easeInOut((tc-0.33)/0.33);labelIdx=blend>0.5?2:1;
-  } else {
-    fromArr=shapeC;toArr=shapeA;blend=easeInOut((tc-0.66)/0.34);labelIdx=blend>0.5?0:2;
-  }
-  showLabel(labelIdx);
+  // Slow color pulse — gold (#C8A96E) to cream (#F0EDE8)
+  const pulse=(Math.sin(Date.now()*0.0004)+1)/2;
+  mat.color.setHex(lerpColor('#C8A96E','#F0EDE8',pulse*0.6));
+  mat.opacity=0.30+pulse*0.18;
 
-  const p=geo.attributes.position.array;
-  for(let i=0;i<COUNT;i++){
-    const ii=i*3;
-    const jitter=Math.sin(t*speeds[i]+phases[i])*0.03;
-    p[ii]  =fromArr[ii]  +(toArr[ii]  -fromArr[ii]  )*blend+jitter;
-    p[ii+1]=fromArr[ii+1]+(toArr[ii+1]-fromArr[ii+1])*blend+jitter;
-    p[ii+2]=fromArr[ii+2]+(toArr[ii+2]-fromArr[ii+2])*blend+jitter;
-  }
-  geo.attributes.position.needsUpdate=true;
+  torusKnot.rotation.x=t*0.5+mouseY*0.3;
+  torusKnot.rotation.y=t*0.7+mouseX*0.3;
+  outerSphere.rotation.x=t*0.08;
+  outerSphere.rotation.y=t*0.12;
 
-  points.rotation.y+=0.001+mouseX*0.0015;
-  points.rotation.x+=(-mouseY*0.012-points.rotation.x)*0.04;
-
-  camera.position.x+=(mouseX*0.35-camera.position.x)*0.04;
-  camera.position.y+=(-mouseY*0.25-camera.position.y)*0.04;
+  camera.position.x+=(mouseX*0.5-camera.position.x)*0.04;
+  camera.position.y+=(-mouseY*0.3-camera.position.y)*0.04;
   camera.lookAt(scene.position);
   renderer.render(scene,camera);
 }
