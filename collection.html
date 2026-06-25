@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Collection — AETHER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Inter:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--black:#000000;--off-white:#F0EDE8;--warm-gray:#9A9590;--mid:#2A2926;--border:#1E1D1B;--accent:#C8B89A;--serif:'Playfair Display',Georgia,serif;--sans:'Inter',sans-serif;--mono:'DM Mono',monospace;}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--off-white);font-family:var(--sans);font-weight:300;overflow-x:hidden;cursor:none}
+.cursor{position:fixed;width:8px;height:8px;background:var(--off-white);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.1s,width 0.3s,height 0.3s}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(240,237,232,0.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.08s,width 0.3s}
+.cursor.hover{width:4px;height:4px}.cursor-ring.hover{width:56px;height:56px;border-color:rgba(200,184,154,0.6)}
+::-webkit-scrollbar{width:2px}::-webkit-scrollbar-track{background:var(--black)}::-webkit-scrollbar-thumb{background:var(--border)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:28px 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--serif);font-size:18px;font-weight:500;letter-spacing:0.12em;color:var(--off-white);text-decoration:none}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm-gray);text-decoration:none;transition:color 0.3s}
+.nav-links a:hover,.nav-links a.active{color:var(--off-white)}
+.nav-cta{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;border:1px solid rgba(240,237,232,0.3);padding:10px 22px;color:var(--off-white);text-decoration:none;transition:all 0.3s}
+.nav-cta:hover{background:var(--off-white);color:var(--black)}
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.9s cubic-bezier(0.16,1,0.3,1),transform 0.9s cubic-bezier(0.16,1,0.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:0.1s}.reveal-delay-2{transition-delay:0.2s}.reveal-delay-3{transition-delay:0.3s}.reveal-delay-4{transition-delay:0.4s}
+.section-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:20px}
+.section-title{font-family:var(--serif);font-size:clamp(36px,4.5vw,64px);font-weight:400;line-height:1.1}
+.section-title em{font-style:italic;color:var(--accent)}
+.btn-primary{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;background:var(--off-white);color:var(--black);padding:14px 36px;text-decoration:none;transition:all 0.3s;font-weight:500;display:inline-block}
+.btn-primary:hover{background:var(--accent)}
+.btn-ghost{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;border:1px solid rgba(240,237,232,0.25);color:var(--off-white);padding:14px 36px;text-decoration:none;transition:all 0.3s;display:inline-block}
+.btn-ghost:hover{border-color:var(--off-white)}
+
+/* PAGE HERO */
+.page-hero{position:relative;height:65vh;min-height:480px;display:flex;align-items:flex-end;padding:80px 48px;overflow:hidden;margin-bottom:0}
+.page-hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.4) saturate(0.8)}
+.page-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.9) 0%,rgba(0,0,0,0.15) 65%,transparent 100%)}
+.page-hero-content{position:relative;z-index:2;max-width:800px}
+.page-hero-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:var(--accent);margin-bottom:24px}
+.page-hero-title{font-family:var(--serif);font-size:clamp(52px,7vw,96px);font-weight:400;line-height:1.02;margin-bottom:20px}
+.page-hero-sub{font-size:14px;color:var(--warm-gray);line-height:1.7;max-width:480px}
+
+/* FILTER BAR */
+.filter-bar{padding:32px 48px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:76px;z-index:50;background:rgba(0,0,0,0.9);backdrop-filter:blur(12px)}
+.filter-tabs{display:flex;gap:0}
+.filter-tab{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--warm-gray);background:none;border:none;padding:10px 24px;cursor:pointer;transition:color 0.3s;border-right:1px solid var(--border)}
+.filter-tab:last-child{border-right:none}
+.filter-tab.active,.filter-tab:hover{color:var(--off-white)}
+.filter-tab.active{color:var(--off-white);border-bottom:1px solid var(--accent)}
+.filter-count{font-family:var(--mono);font-size:10px;letter-spacing:0.15em;color:var(--warm-gray)}
+
+/* CATEGORY SECTIONS */
+.category-section{padding:96px 48px;border-bottom:1px solid var(--border)}
+.category-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px}
+.category-title{font-family:var(--serif);font-size:clamp(32px,4vw,56px);font-weight:400}
+.category-meta{font-family:var(--mono);font-size:10px;color:var(--warm-gray);letter-spacing:0.12em;text-align:right;line-height:1.8}
+.category-link{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:gap 0.3s}
+.category-link:hover{gap:16px}
+
+/* PRODUCT GRID */
+.product-grid{display:grid;gap:2px}
+.product-grid-4{grid-template-columns:repeat(4,1fr)}
+.product-grid-3{grid-template-columns:repeat(3,1fr)}
+.product-grid-featured{grid-template-columns:2fr 1fr 1fr}
+
+.prod-card{position:relative;overflow:hidden;cursor:pointer;background:var(--mid)}
+.prod-card-tall{aspect-ratio:2/3}
+.prod-card-square{aspect-ratio:1/1}
+.prod-card-wide{aspect-ratio:16/9}
+.prod-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.7) saturate(0.85);transition:transform 0.8s cubic-bezier(0.16,1,0.3,1),filter 0.5s}
+.prod-card:hover .prod-img{transform:scale(1.06);filter:brightness(0.55) saturate(0.9)}
+.prod-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.8) 0%,transparent 55%)}
+.prod-info{position:absolute;bottom:0;left:0;right:0;padding:24px 28px 28px;z-index:2}
+.prod-name{font-family:var(--serif);font-size:20px;font-weight:400;margin-bottom:4px}
+.prod-sub{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;color:var(--warm-gray);text-transform:uppercase}
+.prod-price{font-family:var(--mono);font-size:11px;color:var(--accent);margin-top:8px}
+.prod-tag{position:absolute;top:16px;right:16px;font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;border:1px solid rgba(240,237,232,0.3);padding:5px 10px;color:var(--off-white);z-index:2;background:rgba(0,0,0,0.3);backdrop-filter:blur(4px)}
+
+/* MARQUEE */
+.marquee-section{padding:32px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden}
+.marquee-track{display:flex;white-space:nowrap;animation:marquee 24s linear infinite}
+.marquee-item{font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:400;font-style:italic;color:var(--mid);padding:0 48px;flex-shrink:0}
+.marquee-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--accent);margin:0 14px;vertical-align:middle}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+footer{border-top:1px solid var(--border);padding:52px 48px;display:grid;grid-template-columns:1fr 1fr 1fr;align-items:end}
+.footer-logo{font-family:var(--serif);font-size:28px;font-weight:400;letter-spacing:0.05em}
+.footer-copy{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;color:var(--warm-gray);text-transform:uppercase}
+.footer-links{display:flex;gap:28px;justify-content:flex-end}
+.footer-links a{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm-gray);text-decoration:none;transition:color 0.3s}
+.footer-links a:hover{color:var(--off-white)}
+
+@media(max-width:900px){
+nav{padding:20px 24px}.nav-links{display:none}
+.page-hero{padding:80px 24px}
+.filter-bar{padding:20px 24px;flex-direction:column;gap:16px;align-items:flex-start}
+.category-section{padding:64px 24px}
+.category-header{flex-direction:column;align-items:flex-start;gap:16px}
+.product-grid-4,.product-grid-3,.product-grid-featured{grid-template-columns:1fr 1fr}
+footer{grid-template-columns:1fr;gap:32px}.footer-links{justify-content:flex-start}
+}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+<nav>
+  <a href="index.html" class="nav-logo">AETHER</a>
+  <ul class="nav-links">
+    <li><a href="collection.html" class="active">Collection</a></li>
+    <li><a href="philosophy.html">Philosophy</a></li>
+    <li><a href="craft.html">Craft</a></li>
+    <li><a href="stories.html">Stories</a></li>
+  </ul>
+  <a href="collection.html" class="nav-cta">Shop</a>
+</nav>
+
+<div class="page-hero">
+  <img class="page-hero-img" src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&auto=format&fit=crop&q=70" alt="Collection"/>
+  <div class="page-hero-overlay"></div>
+  <div class="page-hero-content">
+    <div class="page-hero-eyebrow">SS 2024</div>
+    <h1 class="page-hero-title">The Collection</h1>
+    <p class="page-hero-sub">Four disciplines. One unwavering standard. Objects made to be owned for a lifetime.</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-tabs">
+    <button class="filter-tab active">All</button>
+    <button class="filter-tab">Sneakers</button>
+    <button class="filter-tab">Bags</button>
+    <button class="filter-tab">Outerwear</button>
+    <button class="filter-tab">Objects</button>
+  </div>
+  <div class="filter-count">24 pieces</div>
+</div>
+
+<!-- SNEAKERS -->
+<section class="category-section reveal">
+  <div class="category-header">
+    <div>
+      <div class="section-eyebrow">01</div>
+      <h2 class="category-title">Sneakers</h2>
+    </div>
+    <div style="text-align:right">
+      <div class="category-meta">12 colorways · from $280</div>
+      <a href="sneakers.html" class="category-link" style="margin-top:12px">View all sneakers →</a>
+    </div>
+  </div>
+  <div class="product-grid product-grid-featured">
+    <div class="prod-card prod-card-tall reveal">
+      <img class="prod-img" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&auto=format&fit=crop&q=70" alt="Runner Low"/>
+      <div class="prod-overlay"></div>
+      <div class="prod-tag">New Season</div>
+      <div class="prod-info">
+        <div class="prod-name">Runner Low</div>
+        <div class="prod-sub">Full-grain leather upper</div>
+        <div class="prod-price">$320</div>
+      </div>
+    </div>
+    <div class="prod-card prod-card-square reveal reveal-delay-1">
+      <img class="prod-img" src="https://images.unsplash.com/photo-1539185441755-769473a23570?w=600&auto=format&fit=crop&q=70" alt="Court Classic"/>
+      <div class="prod-overlay"></div>
+      <div class="prod-info">
+        <div class="prod-name">Court Classic</div>
+        <div class="prod-sub">Canvas & rubber sole</div>
+        <div class="prod-price">$280</div>
+      </div>
+    </div>
+    <div class="prod-card prod-card-square reveal reveal-delay-2">
+      <img class="prod-img" src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=600&auto=format&fit=crop&q=70" alt="Trail Mid"/>
+      <div class="prod-overlay"></div>
+      <div class="prod-tag">Limited</div>
+      <div class="prod-info">
+        <div class="prod-name">Trail Mid</div>
+        <div class="prod-sub">Technical mesh upper</div>
+        <div class="prod-price">$360</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BAGS -->
+<section class="category-section reveal">
+  <div class="category-header">
+    <div>
+      <div class="section-eyebrow">02</div>
+      <h2 class="category-title">Bags</h2>
+    </div>
+    <div style="text-align:right">
+      <div class="category-meta">8 styles · from $420</div>
+      <a href="bags.html" class="category-link" style="margin-top:12px">View all bags →</a>
+    </div>
+  </div>
+  <div class="product-grid product-grid-4">
+    <div class="prod-card prod-card-tall reveal">
+      <img class="prod-img" src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&auto=format&fit=crop&q=70" alt="Tote No.1"/>
+      <div class="prod-overlay"></div>
+      <div class="prod-info">
+        <div class="prod-name">Tote No.1</div>
+        <div class="prod-sub">Vegetable-tanned</div>
+        <div class="prod-price">$520</div>
+      </div>
+    </div>
+    <div class="prod-card prod-card-tall reveal reveal-delay-1">
+      <img class="prod-img" src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&auto=format&fit=crop&q=70" alt="Messenger"/>
+      <div class="prod-overlay"></div>
+      <div class="prod-tag">Bestseller</div>
+      <div class="prod-info">
+        <div class="prod-name">Messenger</div>
+        <div class="prod-sub">Full-grain leather</div>
+        <div class="prod-price">$680</div>
+      </div>
+    </div>
+    <div class="prod-card prod-card-tall reveal reveal-delay-2">
+      <img class="prod-img" src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format&fit=crop&q=70" alt="Backpack"/>
+      <div class="prod-overlay"></div>
+      <div class="prod-info">
+        <div class="prod-name">Backpack</div>
+        <div class="prod-sub">Waxed canvas</div>
+        <div class="prod-price">$420</div>
+      </div>
+    </div>
+    <div class="prod-card prod-card-tall reveal reveal-delay-3">
+      <img class="prod-img" src="https://images.unsplash.com/photo-1614179818511-7851d7c7f3d1?w=600&auto=format&fit=crop&q=70" alt="Card Wallet"/>
+      <div class="prod-overlay"></div>
+      <div class="prod-info">
+        <div class="prod-name">Card Wallet</div>
+        <div class="prod-sub">Bridle leather</div>
+        <div class="prod-price">$145</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OUTERWEAR -->
+<section class="category-section reveal">
+  <div class="category-header">
+    <div>
+      <div class="section-eyebrow">03</div>
+      <h2 class="category-title">Outerwear</h2>
+    </div>
+    <div style="text-align:right">
+      <div class="category-meta">6 styles · from $680</div>
+      <a href="outerwear.html" class="category-link" style="margin-top:12px">View all outerwear →</a>
+    </div>
+  </div>
+  <div class="product-grid product-grid-3">
+    <div class="prod-card prod-card-tall reveal">
+      <img class="prod-img" src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=700&auto=format&fit=crop&q=70" alt="Field Jacket"/>
+      <div class="prod-overlay"></div>
+      <div class="prod-tag">Limited</div>
+      <div class="prod-info">
+        <div class="prod-name">Field Jacket</div>
+        <div class="prod-sub">Waxed cotton shell</div>
+        <div class="prod-price">$820</div>
+      </div>
+    </div>
+    <div class="prod-card prod-card-tall reveal reveal-delay-1">
+      <img class="prod-img" src="https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=700&auto=format&fit=crop&q=70" alt="Technical Shell"/>
+      <div class="prod-overlay"></div>
+      <div class="prod-info">
+        <div class="prod-name">Technical Shell</div>
+        <div class="prod-sub">3-layer Gore-Tex</div>
+        <div class="prod-price">$1,100</div>
+      </div>
+    </div>
+    <div class="prod-card prod-card-tall reveal reveal-delay-2">
+      <img class="prod-img" src="https://images.unsplash.com/photo-1520975954732-35dd22299614?w=700&auto=format&fit=crop&q=70" alt="Wool Overcoat"/>
+      <div class="prod-overlay"></div>
+      <div class="prod-info">
+        <div class="prod-name">Wool Overcoat</div>
+        <div class="prod-sub">Italian merino wool</div>
+        <div class="prod-price">$680</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EVERYDAY OBJECTS -->
+<section class="category-section reveal">
+  <div class="category-header">
+    <div>
+      <div class="section-eyebrow">04</div>
+      <h2 class="category-title">Everyday Objects</h2>
+    </div>
+    <div style="text-align:right">
+      <div class="category-meta">14 pieces · from $45</div>
+      <a href="objects.html" class="category-link" style="margin-top:12px">View all objects →</a>
+    </div>
+  </div>
+  <div class="product-grid product-grid-4">
+    <div class="prod-card prod-card-square reveal">
+      <img class="prod-img" src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&auto=format&fit=crop&q=70" alt="Key Fob"/>
+      <div class="prod-overlay"></div>
+      <div class="prod-info">
+        <div class="prod-name">Key Fob</div>
+        <div class="prod-sub">Bridle leather</div>
+        <div class="prod-price">$45</div>
+      </div>
+    </div>
+    <div class="prod-card prod-card-square reveal reveal-delay-1">
+      <img class="prod-img" src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=600&auto=format&fit=crop&q=70" alt="Notebook Cover"/>
+      <div class="prod-overlay"></div>
+      <div class="prod-info">
+        <div class="prod-name">Notebook Cover</div>
+        <div class="prod-sub">Full-grain leather</div>
+        <div class="prod-price">$120</div>
+      </div>
+    </div>
+    <div class="prod-card prod-card-square reveal reveal-delay-2">
+      <img class="prod-img" src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format&fit=crop&q=70" alt="Watch Strap"/>
+      <div class="prod-overlay"></div>
+      <div class="prod-tag">New</div>
+      <div class="prod-info">
+        <div class="prod-name">Watch Strap</div>
+        <div class="prod-sub">Horween leather</div>
+        <div class="prod-price">$95</div>
+      </div>
+    </div>
+    <div class="prod-card prod-card-square reveal reveal-delay-3">
+      <img class="prod-img" src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=600&auto=format&fit=crop&q=70" alt="Cardholder"/>
+      <div class="prod-overlay"></div>
+      <div class="prod-info">
+        <div class="prod-name">Cardholder</div>
+        <div class="prod-sub">Slim bridle leather</div>
+        <div class="prod-price">$75</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item">Objects worth slowing down for <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Made to last <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Free worldwide shipping <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Repair for life <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Objects worth slowing down for <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Made to last <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Free worldwide shipping <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Repair for life <span class="marquee-dot"></span></span>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">AETHER</div>
+  <div class="footer-copy">© 2024 Aether. All rights reserved.</div>
+  <div class="footer-links">
+    <a href="#">Instagram</a><a href="#">Contact</a><a href="#">Stockists</a><a href="#">Repairs</a>
+  </div>
+</footer>
+
+<script>
+const cursor=document.getElementById("cursor"),ring=document.getElementById("cursor-ring");
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener("mousemove",e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+"px";cursor.style.top=my+"px"});
+function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+"px";ring.style.top=ry+"px";requestAnimationFrame(animRing)}
+animRing();
+document.querySelectorAll("a,button").forEach(el=>{
+  el.addEventListener("mouseenter",()=>{cursor.classList.add("hover");ring.classList.add("hover")});
+  el.addEventListener("mouseleave",()=>{cursor.classList.remove("hover");ring.classList.remove("hover")});
+});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add("visible")});},{threshold:0.08});
+document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
+document.querySelectorAll(".filter-tab").forEach(tab=>{
+  tab.addEventListener("click",()=>{document.querySelectorAll(".filter-tab").forEach(t=>t.classList.remove("active"));tab.classList.add("active");});
+});
+</script>
+</body>
+</html>

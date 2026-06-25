@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Craft — AETHER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Inter:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--black:#000000;--off-white:#F0EDE8;--warm-gray:#9A9590;--mid:#2A2926;--border:#1E1D1B;--accent:#C8B89A;--serif:'Playfair Display',Georgia,serif;--sans:'Inter',sans-serif;--mono:'DM Mono',monospace;}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--off-white);font-family:var(--sans);font-weight:300;overflow-x:hidden;cursor:none}
+.cursor{position:fixed;width:8px;height:8px;background:var(--off-white);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width 0.3s,height 0.3s}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(240,237,232,0.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.08s,width 0.3s}
+.cursor.hover{width:4px;height:4px}.cursor-ring.hover{width:56px;height:56px}
+::-webkit-scrollbar{width:2px}::-webkit-scrollbar-track{background:var(--black)}::-webkit-scrollbar-thumb{background:var(--border)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:28px 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--serif);font-size:18px;font-weight:500;letter-spacing:0.12em;color:var(--off-white);text-decoration:none}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm-gray);text-decoration:none;transition:color 0.3s}
+.nav-links a:hover,.nav-links a.active{color:var(--off-white)}
+.nav-cta{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;border:1px solid rgba(240,237,232,0.3);padding:10px 22px;color:var(--off-white);text-decoration:none;transition:all 0.3s}
+.nav-cta:hover{background:var(--off-white);color:var(--black)}
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.9s cubic-bezier(0.16,1,0.3,1),transform 0.9s cubic-bezier(0.16,1,0.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:0.1s}.reveal-delay-2{transition-delay:0.2s}.reveal-delay-3{transition-delay:0.3s}
+.btn-primary{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;background:var(--off-white);color:var(--black);padding:14px 36px;text-decoration:none;transition:all 0.3s;font-weight:500;display:inline-block}
+.btn-primary:hover{background:var(--accent)}
+.btn-ghost{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;border:1px solid rgba(240,237,232,0.25);color:var(--off-white);padding:14px 36px;text-decoration:none;transition:all 0.3s;display:inline-block}
+.btn-ghost:hover{border-color:var(--off-white)}
+
+/* HERO */
+.page-hero{position:relative;height:80vh;min-height:560px;display:flex;align-items:flex-end;padding:80px 48px;overflow:hidden}
+.page-hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.38) saturate(0.75)}
+.page-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.92) 0%,rgba(0,0,0,0.1) 65%)}
+.page-hero-content{position:relative;z-index:2;max-width:720px}
+.page-hero-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:var(--accent);margin-bottom:24px}
+.page-hero-title{font-family:var(--serif);font-size:clamp(48px,6.5vw,90px);font-weight:400;line-height:1.04;margin-bottom:24px}
+.page-hero-sub{font-size:14px;color:var(--warm-gray);line-height:1.8;max-width:440px}
+
+/* PROCESS STEPS */
+.process{padding:0 48px}
+.process-step{display:grid;grid-template-columns:1fr 1fr;gap:2px;border-bottom:1px solid var(--border)}
+.process-step:first-child{border-top:1px solid var(--border)}
+.process-step-img{position:relative;overflow:hidden;min-height:560px}
+.process-step-img img{width:100%;height:100%;object-fit:cover;filter:brightness(0.6) saturate(0.8);position:absolute;inset:0;transition:transform 0.9s cubic-bezier(0.16,1,0.3,1)}
+.process-step:hover .process-step-img img{transform:scale(1.04)}
+.process-step-content{padding:72px 64px;display:flex;flex-direction:column;justify-content:center;background:var(--mid)}
+.process-step:nth-child(even) .process-step-img{order:2}
+.process-step:nth-child(even) .process-step-content{order:1;background:#1a1916}
+.step-num{font-family:var(--mono);font-size:10px;letter-spacing:0.24em;color:var(--warm-gray);margin-bottom:32px}
+.step-title{font-family:var(--serif);font-size:clamp(28px,3vw,44px);font-weight:400;line-height:1.2;margin-bottom:24px}
+.step-title em{font-style:italic;color:var(--accent)}
+.step-body{font-size:13px;line-height:1.95;color:var(--warm-gray);max-width:420px}
+.step-body p+p{margin-top:18px}
+.step-detail{margin-top:40px;border-top:1px solid var(--border);padding-top:28px}
+.step-detail-item{display:flex;align-items:flex-start;gap:16px;margin-bottom:14px}
+.step-detail-item:last-child{margin-bottom:0}
+.step-detail-dot{width:4px;height:4px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:6px}
+.step-detail-text{font-family:var(--mono);font-size:10px;letter-spacing:0.12em;color:var(--warm-gray);line-height:1.6}
+
+/* MATERIALS */
+.materials{padding:140px 48px;background:var(--off-white);color:var(--black);border-top:1px solid rgba(0,0,0,0.1)}
+.materials-header{margin-bottom:80px}
+.materials-header h2{font-family:var(--serif);font-size:clamp(36px,4vw,60px);font-weight:400;line-height:1.1;margin-top:16px}
+.materials-header h2 em{font-style:italic;color:#B0905A}
+.materials-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#9A9590;margin-bottom:20px}
+.materials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.material-card{background:rgba(0,0,0,0.04);padding:40px 36px}
+.material-name{font-family:var(--serif);font-size:22px;font-weight:400;color:var(--black);margin-bottom:8px}
+.material-origin{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:#9A9590;margin-bottom:16px}
+.material-desc{font-size:13px;line-height:1.85;color:#6B6762}
+
+/* REPAIR */
+.repair{padding:140px 48px;display:grid;grid-template-columns:1fr 1fr;gap:120px;align-items:center;border-top:1px solid var(--border)}
+.repair-img{position:relative;aspect-ratio:4/5;overflow:hidden}
+.repair-img img{width:100%;height:100%;object-fit:cover;filter:brightness(0.6) saturate(0.8)}
+.repair-content h2{font-family:var(--serif);font-size:clamp(36px,4vw,60px);font-weight:400;line-height:1.1;margin-bottom:28px}
+.repair-content h2 em{font-style:italic;color:var(--accent)}
+.repair-body{font-size:14px;line-height:1.9;color:var(--warm-gray);margin-bottom:40px}
+.repair-body p+p{margin-top:18px}
+
+footer{border-top:1px solid var(--border);padding:52px 48px;display:grid;grid-template-columns:1fr 1fr 1fr;align-items:end}
+.footer-logo{font-family:var(--serif);font-size:28px;font-weight:400;letter-spacing:0.05em}
+.footer-copy{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;color:var(--warm-gray);text-transform:uppercase}
+.footer-links{display:flex;gap:28px;justify-content:flex-end}
+.footer-links a{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm-gray);text-decoration:none;transition:color 0.3s}
+.footer-links a:hover{color:var(--off-white)}
+@media(max-width:900px){
+nav{padding:20px 24px}.nav-links{display:none}
+.page-hero{padding:80px 24px;height:65vh}
+.process{padding:0 24px}
+.process-step{grid-template-columns:1fr}
+.process-step-img{min-height:300px;order:1!important}
+.process-step-content{order:2!important;padding:48px 28px}
+.materials{padding:80px 24px}.materials-grid{grid-template-columns:1fr}
+.repair{grid-template-columns:1fr;gap:48px;padding:80px 24px}
+footer{grid-template-columns:1fr;gap:32px}.footer-links{justify-content:flex-start}
+}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+<nav>
+  <a href="index.html" class="nav-logo">AETHER</a>
+  <ul class="nav-links">
+    <li><a href="collection.html">Collection</a></li>
+    <li><a href="philosophy.html">Philosophy</a></li>
+    <li><a href="craft.html" class="active">Craft</a></li>
+    <li><a href="stories.html">Stories</a></li>
+  </ul>
+  <a href="collection.html" class="nav-cta">Shop</a>
+</nav>
+
+<div class="page-hero">
+  <img class="page-hero-img" src="https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=1600&auto=format&fit=crop&q=70" alt="Craft"/>
+  <div class="page-hero-overlay"></div>
+  <div class="page-hero-content">
+    <div class="page-hero-eyebrow">How we build</div>
+    <h1 class="page-hero-title">Process is not a story we tell.</h1>
+    <p class="page-hero-sub">It shows in the object. Every decision — material, method, time — is visible if you know where to look.</p>
+  </div>
+</div>
+
+<div class="process">
+  <div class="process-step">
+    <div class="process-step-img reveal">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&auto=format&fit=crop&q=70" alt="Materials"/>
+    </div>
+    <div class="process-step-content reveal reveal-delay-1">
+      <div class="step-num">Step 01 / Materials</div>
+      <h2 class="step-title">We begin at the<br><em>source, not the catalogue.</em></h2>
+      <div class="step-body">
+        <p>Every material we use has a name and a face behind it. A tannery in Somerset that has been operating since 1862. A brass foundry in northern Italy run by one family for three generations.</p>
+        <p>We visit before we order. We order less than we could use. We return if anything changes.</p>
+      </div>
+      <div class="step-detail">
+        <div class="step-detail-item"><div class="step-detail-dot"></div><div class="step-detail-text">All leather sourced from LWG Gold-rated tanneries</div></div>
+        <div class="step-detail-item"><div class="step-detail-dot"></div><div class="step-detail-text">Hardware cast from recycled brass, no plating</div></div>
+        <div class="step-detail-item"><div class="step-detail-dot"></div><div class="step-detail-text">Technical fabrics woven to our own specification</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="process-step">
+    <div class="process-step-img reveal">
+      <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=900&auto=format&fit=crop&q=70" alt="Construction"/>
+    </div>
+    <div class="process-step-content reveal reveal-delay-1">
+      <div class="step-num">Step 02 / Construction</div>
+      <h2 class="step-title">Methods chosen for the object,<br><em>not the schedule.</em></h2>
+      <div class="step-body">
+        <p>We do not outsource quality control because we cannot — our makers are our designers in the truest sense. The hand that holds the needle decides what the object becomes.</p>
+        <p>Every product is finished and inspected by the maker before it leaves the workshop. Not by a separate QC team. By the person who built it.</p>
+      </div>
+      <div class="step-detail">
+        <div class="step-detail-item"><div class="step-detail-dot"></div><div class="step-detail-text">Hand-stitched with waxed linen thread, 7 stitches per cm</div></div>
+        <div class="step-detail-item"><div class="step-detail-dot"></div><div class="step-detail-text">Edges burnished by hand, no edge paint</div></div>
+        <div class="step-detail-item"><div class="step-detail-dot"></div><div class="step-detail-text">Each piece signed by its maker on the interior</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="process-step">
+    <div class="process-step-img reveal">
+      <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&auto=format&fit=crop&q=70" alt="Time"/>
+    </div>
+    <div class="process-step-content reveal reveal-delay-1">
+      <div class="step-num">Step 03 / Time</div>
+      <h2 class="step-title">Deadlines exist for<br><em>shipping. Not for craft.</em></h2>
+      <div class="step-body">
+        <p>We release when a thing is ready. That has meant delaying products by six months, scrapping entire runs, and starting over. We consider this completely normal.</p>
+        <p>A sneaker last takes 18 months to develop. We spent that time. The first run sold out in four hours. We did not rush the second run.</p>
+      </div>
+      <div class="step-detail">
+        <div class="step-detail-item"><div class="step-detail-dot"></div><div class="step-detail-text">Average development cycle: 14–22 months per product</div></div>
+        <div class="step-detail-item"><div class="step-detail-dot"></div><div class="step-detail-text">Leather aged minimum 90 days before cutting</div></div>
+        <div class="step-detail-item"><div class="step-detail-dot"></div><div class="step-detail-text">No fast-follow products. Ever.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="materials">
+  <div class="materials-header reveal">
+    <div class="materials-eyebrow">What we use</div>
+    <h2>Materials with<br><em>provenance.</em></h2>
+  </div>
+  <div class="materials-grid">
+    <div class="material-card reveal">
+      <div class="material-name">Vegetable-tanned Leather</div>
+      <div class="material-origin">Horween Leather Co. · Chicago, IL</div>
+      <div class="material-desc">Tanned using traditional oak bark methods. Takes 6 weeks minimum. Develops a patina unique to each owner. Used in bags, wallets, and shoe uppers.</div>
+    </div>
+    <div class="material-card reveal reveal-delay-1">
+      <div class="material-name">Waxed Cotton Canvas</div>
+      <div class="material-origin">Halley Stevensons · Dundee, Scotland</div>
+      <div class="material-desc">Woven and waxed on-site since 1864. Waterproof without a membrane. Re-waxable indefinitely. Used in field jackets and backpacks.</div>
+    </div>
+    <div class="material-card reveal reveal-delay-2">
+      <div class="material-name">Solid Brass Hardware</div>
+      <div class="material-origin">Riri Group · Mendrisio, Switzerland</div>
+      <div class="material-desc">Cast from recycled brass. Never plated — the surface you see is the material itself. Develops a warm patina with age. Used on all bags and straps.</div>
+    </div>
+    <div class="material-card reveal reveal-delay-3">
+      <div class="material-name">Merino Wool Shell</div>
+      <div class="material-origin">Vitale Barberis Canonico · Biella, Italy</div>
+      <div class="material-desc">Woven to our 380g/m² specification. Naturally temperature-regulating. Used in the Wool Overcoat and select interior linings.</div>
+    </div>
+    <div class="material-card reveal reveal-delay-1">
+      <div class="material-name">Technical Mesh</div>
+      <div class="material-origin">Schoeller Textil · Sevelen, Switzerland</div>
+      <div class="material-desc">A proprietary 3D-knit developed in collaboration. Lightweight, breathable, and extraordinarily durable. Used in sneaker uppers and technical linings.</div>
+    </div>
+    <div class="material-card reveal reveal-delay-2">
+      <div class="material-name">Natural Rubber Outsoles</div>
+      <div class="material-origin">Vibram · Albizzate, Italy</div>
+      <div class="material-desc">Poured in small batches to our hardness specification. Designed to be resoled — the entire outsole unit is replaceable as a single piece.</div>
+    </div>
+  </div>
+</div>
+
+<div class="repair">
+  <div class="repair-img reveal">
+    <img src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=800&auto=format&fit=crop&q=70" alt="Repair"/>
+  </div>
+  <div class="repair-content reveal reveal-delay-1">
+    <h2>We make things<br><em>you can repair.</em></h2>
+    <div class="repair-body">
+      <p>Every AETHER product comes with a repair commitment. Not a warranty. A commitment — we will fix it, resole it, restitch it for as long as you own it.</p>
+      <p>This is not generosity. It is how we designed the objects. Every stitch is accessible. Every piece of hardware is replaceable. Every outsole is resoleable. We built it this way on purpose.</p>
+      <p>Send anything back. We will make it right.</p>
+    </div>
+    <div style="display:flex;gap:16px">
+      <a href="#" class="btn-primary">Request a repair</a>
+      <a href="collection.html" class="btn-ghost">Shop the collection</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">AETHER</div>
+  <div class="footer-copy">© 2024 Aether. All rights reserved.</div>
+  <div class="footer-links">
+    <a href="#">Instagram</a><a href="#">Contact</a><a href="#">Stockists</a><a href="#">Repairs</a>
+  </div>
+</footer>
+
+<script>
+const cursor=document.getElementById("cursor"),ring=document.getElementById("cursor-ring");
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener("mousemove",e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+"px";cursor.style.top=my+"px"});
+function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+"px";ring.style.top=ry+"px";requestAnimationFrame(animRing)}
+animRing();
+document.querySelectorAll("a,button").forEach(el=>{
+  el.addEventListener("mouseenter",()=>{cursor.classList.add("hover");ring.classList.add("hover")});
+  el.addEventListener("mouseleave",()=>{cursor.classList.remove("hover");ring.classList.remove("hover")});
+});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add("visible")});},{threshold:0.08});
+document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
